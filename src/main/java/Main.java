@@ -1,4 +1,6 @@
 import DAO.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.Scanner;
 
@@ -7,38 +9,25 @@ import java.util.Scanner;
  */
 public class Main {
 
-    static EmployeeDAO employeeDAO =  new EmployeeDAO();
+    static EmployeeDAO employeeDAO = new EmployeeDAO();
     static DishesDAO dishesDAO = new DishesDAO();
+    static OrdersDAO ordersDAO = new OrdersDAO();
     static ListOfIngredientsDAO listOfIngredientsDAO = new ListOfIngredientsDAO();
     static ListOfDishesDAO listOfDishesDAO = new ListOfDishesDAO();
     static MenuDAO menuDAO = new MenuDAO();
     static StorageDAO storageDAO = new StorageDAO();
+    static Requests requests = new Requests();
 
 
     public static void main(String[] args) {
 
-//        storageDAO.addNewPosition();
-        storageDAO.deletePositionByID();
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("application-context.xml");
+        Main main = applicationContext.getBean("Main", Main.class);
+        main.execution();
 
-//        listOfDishesDAO.deletePositionByID();
-//        listOfDishesDAO.addNewPosition();
-//        menuDAO.deletePositionByID();
-//        menuDAO.addNewPosition();
-//        listOfIngredientsDAO.deletePositionByID();
-//        dishesDAO.showAllPositions();
-//        dishesDAO.addNewPosition();
-//        dishesDAO.deletePositionByID();
-//        listOfIngredientsDAO.addNewPosition();
-//        loadDriver();
-//        dishesDAO.findPositionByName(enteredString());
-//        dishesDAO.showAllPositions();
-//        employeeDAO.deleteEmployeeByID();
-//        employeeDAO.addNewPosition();
-//        employeeDAO.getAll().forEach(System.out::println);
-//        employeeDAO.findEmployeeByName(enteredString()).forEach(System.out::println);
     }
 
-    private static void loadDriver(){
+    private static void loadDriver() {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
@@ -48,18 +37,88 @@ public class Main {
     }
 
     public static void execution() {
-        System.out.println("Выбирите раздел : ");
-        System.out.println("Сотрудники : 1" +
-                            "Блюда : 2" +
-                            "Меню : 3" +
-                            "Заказы : 4" +
-                            "Журнал блюд : 5" +
-                            "Склад : 6");
-        int number = Integer.parseInt(new Scanner(System.in).nextLine());
 
-        switch (number) {
-            case 1 :
+        Scanner scanner = new Scanner(System.in);
+        boolean flag = true;
+
+        System.out.println();
+        System.out.println("Выбирите раздел : ");
+        System.out.println("1 : Сотрудники" + "\n" +
+                "2 : Блюда" + "\n" +
+                "3 : Меню" + "\n" +
+                "4 : Заказы " + "\n" +
+                "5 : Журнал блюд" + "\n" +
+                "6 : Склад" + "\n" +
+                "0 : Выйти из приложения ");
+        int number = Integer.parseInt(scanner.nextLine());
+
+        while (flag) {
+            switch (number) {
+                case 1:
+                    System.out.println("Выбирите действие :" + "\n" +
+                            "1 : посмотреть всех сотрудников" + "\n" +
+                            "2 : добавить сотрудника " + "\n" +
+                            "3 : удалить сотрудника" + "\n" +
+                            "4 : найти сотрудника по имени" + "\n" +
+                            "0 : выход");
+                    number = Integer.parseInt(scanner.nextLine());
+                    flag = switchCases(flag, number, employeeDAO);
+                    break;
+                case 2:
+                    System.out.println("Выбирите действие :" + "\n" +
+                            "1 : посмотреть все блюда" + "\n" +
+                            "2 : добавить блюдо " + "\n" +
+                            "3 : удалить блюдо" + "\n" +
+                            "4 : найти блюдо по названию" + "\n" +
+                            "0 : выход");
+                    number = Integer.parseInt(scanner.nextLine());
+                    flag = switchCases(flag, number, dishesDAO);
+                    break;
+                case 3 :
+                    System.out.println("Выбирите действие :" + "\n" +
+                            "1 : посмотреть все меню" + "\n" +
+                            "2 : добавить меню " + "\n" +
+                            "3 : удалить меню" + "\n" +
+                            "4 : найти меню по названию" + "\n" +
+                            "0 : выход");
+                    number = Integer.parseInt(scanner.nextLine());
+                    flag = switchCases(flag, number, menuDAO);
+                    break;
+                case 4 :
+                    System.out.println("Выбирите действие :" + "\n" +
+                            "1 : посмотреть все заказы" + "\n" +
+                            "2 : добавить меню " + "\n" +
+                            "3 : удалить меню" + "\n" +
+                            "4 : найти меню по названию" + "\n" +
+                            "0 : выход");
+                    number = Integer.parseInt(scanner.nextLine());
+                    flag = switchCases(flag, number, ordersDAO);
+                    break;
+                case 5 :
+                    System.out.println();
+                    break;
+            }
         }
+
     }
 
+    private static boolean switchCases(boolean flag, int number, TableDAO tableDAO) {
+        switch (number) {
+            case 1:
+                tableDAO.showAllPositions();
+                break;
+            case 2:
+                tableDAO.addNewPosition();
+                break;
+            case 3:
+                tableDAO.deletePositionByID();
+                break;
+            case 4:
+                tableDAO.findPositionByName(requests.enteredString());
+                break;
+            case 0:
+                flag = false;
+        }
+        return flag;
+    }
 }

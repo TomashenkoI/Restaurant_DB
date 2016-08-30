@@ -3,6 +3,7 @@ package DAO;
 import tables.Employee;
 import tables.Positions;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -13,6 +14,8 @@ import static DAO.Requests.*;
  * Created by 7 on 20.08.2016.
  */
 public class EmployeeDAO implements TableDAO<Employee> {
+
+    private DataSource dataSource;
 
     public static int MAX_ID;
 
@@ -70,7 +73,7 @@ public class EmployeeDAO implements TableDAO<Employee> {
 
         ArrayList<Employee> employees = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             String sql = "SELECT * FROM employees";
             ResultSet resultSet = statement.executeQuery(sql);
@@ -135,7 +138,7 @@ public class EmployeeDAO implements TableDAO<Employee> {
 
         showAllPositions();
 
-            try (Connection connection = DriverManager.getConnection(USER, USER, PASSWORD);
+            try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 Statement statement = connection.createStatement()) {
 
                 System.out.println("Введите номер сотрудника для удаления: ");
@@ -169,5 +172,7 @@ public class EmployeeDAO implements TableDAO<Employee> {
         }
     }
 
-
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 }

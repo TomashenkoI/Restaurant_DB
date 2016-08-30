@@ -3,10 +3,12 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="Main" class="Main"/>
+    <bean id="main" class="Main">
+        <property name="employeeDAO" ref="employeeDao"/>
+    </bean>
 
     <bean id="employeeDao" class="DAO.EmployeeDAO">
-        <property name="dataSource" ref="dataSource1"/>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
 
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
@@ -17,16 +19,6 @@
         <property name="minPoolSize" value="${jdbc.min.connections}"/>
         <property name="maxPoolSize" value="${jdbc.max.connections}"/>
         <property name="acquireIncrement" value="${jdbc.acquire.increment}"/>
-    </bean>
-
-    <bean id="dataSource1" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-        <property name="driverClass" value="org.postgresql.Driver"/>
-        <property name="jdbcUrl" value="jdbc:postgresql://localhost:5432/restaurant"/>
-        <property name="user" value="postgres"/>
-        <property name="password" value="1111"/>
-        <property name="minPoolSize" value="1"/>
-        <property name="maxPoolSize" value="10"/>
-        <property name="acquireIncrement" value="1"/>
     </bean>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">

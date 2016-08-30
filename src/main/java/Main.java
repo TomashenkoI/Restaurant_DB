@@ -9,7 +9,7 @@ import java.util.Scanner;
  */
 public class Main {
 
-    static EmployeeDAO employeeDAO = new EmployeeDAO();
+    private EmployeeDAO employeeDAO;
     static DishesDAO dishesDAO = new DishesDAO();
     static OrdersDAO ordersDAO = new OrdersDAO();
     static ListOfIngredientsDAO listOfIngredientsDAO = new ListOfIngredientsDAO();
@@ -18,25 +18,19 @@ public class Main {
     static StorageDAO storageDAO = new StorageDAO();
     static Requests requests = new Requests();
 
+    public void setEmployeeDAO(EmployeeDAO employeeDAO) {
+        this.employeeDAO = employeeDAO;
+    }
 
     public static void main(String[] args) {
 
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("application-context.xml");
-        Main main = applicationContext.getBean("Main", Main.class);
+        Main main = applicationContext.getBean("main", Main.class);
         main.execution();
 
     }
 
-    private static void loadDriver() {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Cannot find driver");
-            e.printStackTrace();
-        }
-    }
-
-    public static void execution() {
+    public void execution() {
 
         Scanner scanner = new Scanner(System.in);
         boolean flag = true;
@@ -121,4 +115,5 @@ public class Main {
         }
         return flag;
     }
+
 }
